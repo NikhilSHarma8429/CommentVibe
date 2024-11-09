@@ -1,0 +1,32 @@
+[
+    {
+      "id": 1,
+      "Name": "Gaurang Trivedi",
+      "LinkedIn": "https://linkedin.com/in/alicejohnson",
+      "GitHub": "https://github.com/alicejohnson"
+    },
+    {
+      "id": 2,
+      "Name": "Nikhil Sharma",
+      "LinkedIn": "https://linkedin.com/in/bobsmith",
+      "GitHub": "https://github.com/bsmith"
+    },
+    {
+      "id": 3,
+      "Name": "Kuldeep Gautam",
+      "LinkedIn": "https://linkedin.com/in/charliebrown",
+      "GitHub": "https://github.com/charliebrown"
+    },
+    {
+      "id": 4,
+      "Name": "Harsh Gautam",
+      "LinkedIn": "https://linkedin.com/in/dianaprince",
+      "GitHub": "https://github.com/dprince"
+    },
+    {
+      "id": 5,
+      "Name": "Jayneesh Kumar",
+      "LinkedIn": "https://linkedin.com/in/edwardlee",
+      "GitHub": "https://github.com/edwardlee"
+    }
+]
