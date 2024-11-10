@@ -1,24 +1,37 @@
-# Logs
-logs
+# Node.js
+node_modules/
 *.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
+package-lock.json
+yarn.lock
 
-node_modules
-dist
-dist-ssr
-*.local
+# Environment Variables
+.env
 
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
+# Python
+*.py[cod]
+__pycache__/
+myvenv/
+*.pkl
+
+# CSV files (if you don't want to track these data files)
+comments.csv
+
+# Vite (Frontend)
+.vite
+
+# Frontend specific
+Frontend/node_modules/
+Frontend/.env.local
+Frontend/.env.*
+Frontend/.vite
+
+# Dist and Build files
+/dist
+/build
+
+# VSCode settings (optional)
+.vscode/
+
+# Miscellaneous
 .DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
+Thumbs.db
