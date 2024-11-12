@@ -5,6 +5,7 @@ import axios from "axios";
 export const Home = () => {
   const [chartImage, setChartImage] = useState(null);
   const [inputValue, setInputValue] = useState(""); // The URL input value state
+  const [feedbackText, setFeedbackText] = useState("")
 
   // State to hold sentiment input (currently not used in this snippet)
   const [sentiment, setSentiment] = useState("");
@@ -56,6 +57,9 @@ export const Home = () => {
       // Create an object URL from the response blob (image)
       const imageUrl = URL.createObjectURL(chartResponse.data);
       setChartImage(imageUrl); // Set the image URL to display
+
+      // const temp = await axios.get("http://localhost:8000/feedback")
+      // setFeedbackText(temp)
     } catch (error) {
       console.error("Error fetching the pie chart:", error);
     }
@@ -107,6 +111,9 @@ export const Home = () => {
         ) : (
           <p style={{ color: "black" }}>Loading pie chart...</p>
         )}
+        <p style={{color: "black"}}>{feedbackText.data}</p>
+        {/* {feedbackText} */}
+        {console.log("feedback -> ", feedbackText.data)}
       </section>
     </main>
   );

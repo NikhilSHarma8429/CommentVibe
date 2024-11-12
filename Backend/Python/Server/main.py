@@ -12,8 +12,13 @@ from fastapi.responses import StreamingResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import List
-import openai
-import os
+from openai import OpenAI
+from dotenv import load_dotenv
+import google.generativeai as genai
+
+arr = []
+
+load_dotenv()
 
 app = FastAPI()
 
@@ -25,7 +30,13 @@ app.add_middleware(
     allow_headers=["*"],  # Allows all headers
 )
 
-openai.api_key = os.getenv("OPENAI_API_KEY") 
+client = OpenAI(
+    # This is the default and can be omitted
+    api_key=os.environ.get("OPENAI_API_KEY"),
+)
+
+API = os.getenv("GEMINI_API")
+# openai.api_key = os.getenv("OPENAI_API_KEY") 
 
 # Define file paths for the model and vectorizer
 MODEL_PATH = Path.cwd() / "knn_model.pkl"
@@ -45,7 +56,7 @@ EXPRESS_URL = "http://localhost:3000/download-csv"  # Express server that return
 
 @app.get("/")
 async def root():
-    return {"message": "FastAPI server is working!"}
+    return arr
 
 @app.get("/fetch-comments-csv")
 async def fetch_comments_csv(videoId: str):
@@ -64,9 +75,16 @@ async def fetch_comments_csv(videoId: str):
             with open(file_path, "wb") as f:
                 f.write(response.content)
 
+            # if os.path.exists(file_path):
+            #     os.remove(file_path)
+            #     print(f"{file_path} has been deleted.")
+            # else:
+            #     print(f"{file_path} does not exist.")
+
             # Return the file as a response, allowing the client to download it
             # return FileResponse(file_path, media_type="text/csv", headers={"Content-Disposition": "attachment; filename=comments.csv"})
             return "Working"
+
 
         else:
             return {"status": "failed", "message": "Error fetching CSV from Express backend"}
@@ -79,7 +97,6 @@ async def analyze():
     df = pd.read_csv("comments.csv")
     
     try:
-        negative_comments = []
         number = [0, 0, 0]  # [negative, neutral, positive]
         
         for i in range(df.shape[0]):
@@ -91,9 +108,10 @@ async def analyze():
             predicted_sentiment = loaded_knn.predict(input_tfidf)
             
             if int(predicted_sentiment[0]) == -1:
-                negative_comments.append(input_sentence)
+                arr.append(input_sentence)
                 number[0] += 1
             elif int(predicted_sentiment[0]) == 0:
+                arr.append(input_sentence)
                 number[1] += 1
             else:
                 number[2] += 1
@@ -124,25 +142,53 @@ class CommentsRequest(BaseModel):
     comments: List[str]
 
 # Define the endpoint
-@app.post("/feedback")
-async def generate_feedback(request: CommentsRequest):
-    try:
-        # Combine comments into a single prompt
-        comments_text = "\n".join(request.comments)
+# @app.get("/feedback")
+# async def generate_feedback():
+#     try:
+
+#         # Combine comments into a single prompt
+#         comments_text = "\n".join(arr)
         
-        # Generate a prompt for ChatGPT to analyze and give feedback on negative and neutral comments
-        prompt = f"Provide feedback to improve based on the following negative and neutral comments:\n{comments_text}"
+#         genai.configure(api_key="AIzaSyDKcr47_1VU67KvKl_5AX5ExQ3NjtIJfWU")
 
-        # Call the OpenAI API
-        response = openai.ChatCompletion.create(
-            model="gpt-4",
-            messages=[{"role": "user", "content": prompt}],
-            max_tokens=150  # Adjust as necessary
-        )
+#         # Create the model
+#         generation_config = {
+#         "temperature": 1,
+#         "top_p": 0.95,
+#         "top_k": 40,
+#         "max_output_tokens": 8192,
+#         "response_mime_type": "text/plain",
+#         }
 
-        # Extract feedback response from API output
-        feedback = response.choices[0].message['content']
-        return {"feedback": feedback}
+#         model = genai.GenerativeModel(
+#         model_name="gemini-1.5-flash",
+#         generation_config=generation_config,
+#         )
 
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error generating feedback: {str(e)}")
+#         chat_session = model.start_chat(
+#         history=[
+#         ]
+#         )
+
+#         response = chat_session.send_message(f"Provide general feedback about the content through the provided comments available on the youtube video:\n{comments_text}")
+
+#         return response.text
+#         # response = model.generate_content(f"Provide feedback to improve content based on the following negative and neutral comments:\n{comments_text}")
+#         # print(response.text)
+
+#         # Generate a prompt for ChatGPT to analyze and give feedback on negative and neutral comments
+#         # prompt = f"Provide feedback to improve content based on the following negative and neutral comments:\n{comments_text}"
+
+#         # # Call the OpenAI API
+#         # response = client.chat.completions.create(
+#         #     model="gpt-3.5-turbo",  # or "gpt-4" if you have access to it
+#         #     messages=[{"role": "user", "content": prompt}],
+#         #     # max_tokens=100  # You can adjust this based on the length of feedback you want
+#         # )
+
+#         # Extract the feedback from the response
+#         # feedback = response.choices[0].message['content']
+#         return response
+
+#     except Exception as e:
+#         raise HTTPException(status_code=500, detail=f"Error generating feedback: {str(e)}")
