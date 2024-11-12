@@ -149,7 +149,7 @@ class CommentsRequest(BaseModel):
 #         # Combine comments into a single prompt
 #         comments_text = "\n".join(arr)
         
-#         genai.configure(api_key="AIzaSyDKcr47_1VU67KvKl_5AX5ExQ3NjtIJfWU")
+#         genai.configure(api_key="")
 
 #         # Create the model
 #         generation_config = {
