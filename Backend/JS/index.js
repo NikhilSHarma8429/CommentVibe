@@ -11,6 +11,7 @@ const app = express();
 
 const API_KEY = process.env.API_KEY;
 const BASE_URL = 'https://www.googleapis.com/youtube/v3/commentThreads';
+console.log(API_KEY)
 
 function extractTextFromHtml(html) {
   const $ = cheerio.load(html);
@@ -20,7 +21,7 @@ function extractTextFromHtml(html) {
 async function fetchComments(videoId, maxComments = 1000) {
   let comments = [];
   let nextPageToken = '';
-  
+  console.log(API_KEY)
   try {
     while (comments.length < maxComments) {
       const response = await axios.get(BASE_URL, {
