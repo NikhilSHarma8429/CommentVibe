@@ -116,3 +116,5 @@ app.get('/', (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server Running at http://localhost:3000`);
 });
+
+module.exports = app;
