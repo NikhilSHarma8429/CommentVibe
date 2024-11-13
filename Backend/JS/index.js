@@ -5,6 +5,7 @@ const cheerio = require('cheerio');
 const createCsvWriter = require('csv-writer').createObjectCsvWriter;
 const fs = require('fs');
 const path = require('path');
+const process = process.env.PORT || 3000
 
 const app = express();
 
@@ -112,6 +113,6 @@ app.get('/', (req, res) => {
   res.send('Server Working');
 });
 
-app.listen(3000, () => {
+app.listen(PORT, () => {
   console.log(`Server Running at http://localhost:3000`);
 });
